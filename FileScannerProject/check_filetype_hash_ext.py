@@ -46,39 +46,51 @@ def check_extension_mismatch(path):
     detected_type = file_type_identifier(path)
 
     text_like = {
-    "txt", "md", "srt", "ini", "html", "xml", "json", "js", "ts", "yml", "yaml",
-    "map", "aspx", "css", "py", "c", "cpp", "h", "java", "class", "kt", "pl", "cmd",
-    "xsl", "bb", "mf", "properties", "smali", "rsa", "sf", "pom", "xm", "asc",
-    "gyp", "jfc", "doi", "download", "sys", "inf", "bnf", "mjs", "less", "svg", "a",
+    "txt","md","srt","ini","html","xml","json","js","ts","yml","yaml",
+    "map","aspx","css","py","c","cpp","h","java","class","kt","pl","cmd",
+    "xsl","bb","mf","properties","smali","rsa","sf","pom","xm","asc",
+    "gyp","jfc","doi","download","sys","inf","bnf","mjs","less","svg","a",
     "ovpn","url","toml","kts","importorder","default","flex","dekstop","dex",
     "tmpl","jcst","raung","mocmaker","dsa","jadxplugin","bb2","dr-farfar","info",
     "prefs","mappings","e4xmi","graffle","log","4","10","11","instance","xmi",
     "setup","6","7","dictionary","jnlib","jsa","access","policy","src","ja",
     "certs","named","tmlanguage","sh","jsonc","cjs","jade","flow","cc","hh",
-    "node","iml","nixl","gypi","mts","tsbuildinfo","gdnsuppress","cat"
+    "node","iml","nixl","gypi","mts","tsbuildinfo","gdnsuppress","cat",
+    "bat","desktop","mockmaker","timestamps","exsd","jnilib","template",
+    "security","bfc","cfg","markdown","1","lock","nix","cts","styl",
+    "0","slf4jserviceprovider"  
 }
 
 
     zip_based = {"zip", "jar", "apk", "docx", "pptx", "xlsx"}
     harmless_image = {"jpg", "jpeg", "png", "webp", "gif", "bmp", "tif", "tiff"}
-
     custom_mapping = {
-        "msi": ["xls", "doc"],     
-        "apkm": ["zip"],           
-        "vbox-extpack": ["gz"],    
-        "m3u8_in": ["Unknown"],    
-        "jar": ["zip"],            
-        "pptx": ["zip"],           
-        "docx": ["zip"],           
-        "xlsx": ["zip"],           
-        "apk": ["zip"],   
-         "aar": ["zip"],
-        "dll": ["exe"],     # DLL/EXE share MZ header
-        "so": ["elf"],      # Linux shared object
-         "sym": ["zip"],
-        "lib": ["ar"],
-        "dat": ["zip"],         
-    }
+    "msi": ["xls", "doc"],     
+    "apkm": ["zip"],           
+    "vbox-extpack": ["gz"],    
+    "m3u8_in": ["Unknown"],    
+    "jar": ["zip"],            
+    "pptx": ["zip"],           
+    "docx": ["zip"],           
+    "xlsx": ["zip"],           
+    "apk": ["zip"],   
+    "aar": ["zip"],
+    "dll": ["exe"],     # DLL/EXE share MZ header
+    "so": ["elf"],      # Linux shared object
+    "sym": ["zip"],
+    "lib": ["ar"],
+    "dat": ["zip"], 
+    "orig": ["exe"], 
+    "v20130911-1000": ["zip"],
+    "m20130911-1000": ["zip"],
+    "20250605-1300": ["zip"],
+    "v20250528-2229": ["zip"],
+    "v20250528-1830": ["zip"],
+    "v20130521-1847": ["zip"],
+    "jnilib": ["Unknown"],
+    "dat": ["Unknown", "zip"]        
+}
+
 
     safe_ignore = {
         "msi": {"Unknown"},     

@@ -1,0 +1,29 @@
+Total files scanned: 10
+Safe files: 10
+Infected files: 0
+
+File types detected:
+
+------------------------------------------------------------
+    jpg: 4
+    pdf: 3
+    png: 2
+    Unknown: 1
+
+
+------------------------------------------------------------
+Infected files:
+
+------------------------------------------------------------
+
+Mismatched file extensions:
+    [WARNING] text.exe: [extension .exe] does not match detected type Unknown
+
+------------------------------------------------------------
+Suspicious Processes:
+    None detected
+
+------------------------------------------------------------
+
+Repeated suspicious connections:
+None detected

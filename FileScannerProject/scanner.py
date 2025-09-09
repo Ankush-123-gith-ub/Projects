@@ -107,8 +107,8 @@ file_type_count = {}  # {"jpg": 2, "pdf": 3}
 infected_files = []  # [("file.pdf", hash)]
 mismatches = []  
 
-folder = r"C:\Users\Asus\OneDrive\Documents\cyber-sb\oops\Projects\FileScannerProject\test_files"
-folder1 = r"C:\Users\Asus\Downloads"
+folder1  = r"test_files"
+folder = r"C:\Users\Asus\Downloads"
 for root, dirs, files in os.walk(folder):
     for file in files:
         total_files += 1
@@ -144,7 +144,7 @@ for root, dirs, files in os.walk(folder):
 
 #---------------------------------------------------- writing file ----------------------------------------------------
 time_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-scanner_file_path = fr"C:\Users\Asus\OneDrive\Documents\cyber-sb\oops\Projects\FileScannerProject\Reports\Scanner_report_{time_stamp}.txt"
+scanner_file_path = fr"Reports\Scanner_report_{time_stamp}.txt"
 THRESHOLD = max(5, DURATION_SEC // 2)
 os.makedirs(os.path.dirname(scanner_file_path), exist_ok=True)
 with open(scanner_file_path,"w") as report:
