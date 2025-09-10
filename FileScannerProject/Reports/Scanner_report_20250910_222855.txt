@@ -1,0 +1,57 @@
+Total files scanned: 10
+Safe files: 10
+Infected files: 0
+
+File types detected:
+
+------------------------------------------------------------
+    jpg: 4
+    pdf: 3
+    png: 2
+    Unknown: 1
+
+
+------------------------------------------------------------
+Infected files:
+
+------------------------------------------------------------
+
+Mismatched file extensions:
+    [WARNING] text.exe: [extension .exe] does not match detected type Unknown
+
+------------------------------------------------------------
+Suspicious Processes:
+     PID: 3432, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 5792, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 7884, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 9576, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 12628, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 13984, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 14212, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 15496, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 16176, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 20028, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 21616, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 22636, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 22736, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 23736, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 24588, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 25800, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 26452, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 27892, Name: steam.exe, Path: c:\program files (x86)\steam\steam.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 27968, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 28520, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 28780, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.271.421.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 29188, Name: whatsapp.exe, Path: c:\program files\windowsapps\5319275a.whatsappdesktop_2.2534.2.0_x64__cv1g1gvanyjgm\whatsapp.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 29652, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 30588, Name: brave.exe, Path: c:\program files\bravesoftware\brave-browser\application\brave.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+
+------------------------------------------------------------
+
+Repeated suspicious connections:
+
+Top 10 repeated suspicious connections:
+ 15 times -> Process: spotify.exe          Remote: 142.251.10.188:5228 (sd-in-f188.1e100.net)
+
+Connections above threshold:
+[ALERT]  15 times -> Process: spotify.exe          Remote: 142.251.10.188:5228 (sd-in-f188.1e100.net)

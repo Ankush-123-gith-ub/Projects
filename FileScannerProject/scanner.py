@@ -7,12 +7,26 @@ from collections import Counter
 from check_filetype_hash_ext import check_extension_mismatch
 from check_filetype_hash_ext import malware_hashes_check
 from check_filetype_hash_ext import file_type_identifier
+from check_filetype_hash_ext import check_file_signature
 
 #-------------------------------------------  monitoring suspicious process by keywords and addr ----------------------------------
 
 
 suspicious_keywords = ["keylogger", "kl", "hooker", "payload"]
 whitelist = ["code.exe", "zoom.exe", "python.exe","zwebview2agent.exe","grammarly.desktop.exe","githubdesktop.exe"]
+ 
+TRUSTED_SIGNATURES = {
+    "code.exe": "Microsoft Corporation",
+    "zoom.exe": "Zoom Video Communications, Inc.",
+    "python.exe": "Python Software Foundation",
+    "githubdesktop.exe": "GitHub, Inc.",
+    "whatsapp.exe": "WhatsApp LLC",
+    "chrome.exe": "Google LLC",
+    "brave.exe": "Brave Software, Inc.",
+    "spotify.exe": "Spotify AB",
+    "steam.exe": "Valve Corporation"
+}
+
 
 suspicious_dirs = ["C:\\Users\\Asus\\AppData", "C:\\Users\\Asus\\Temp"]
 
@@ -41,8 +55,19 @@ for proc in psutil.process_iter(['pid','name','exe']):
                       keyword_path = True
                       break
                  
-            if (keyword_suspicious or keyword_path) and name not in whitelist:
-                 suspicious_process.append(proc.info)
+            sig_suspicious = False
+            if name in TRUSTED_SIGNATURES and exe:
+                sig_status = check_file_signature(exe)
+                if sig_status != "Valid":
+                    sig_suspicious = True
+                 
+            if (keyword_suspicious or keyword_path or sig_suspicious) and name not in whitelist:
+                suspicious_process.append({
+                    "pid": proc.info['pid'],
+                    "name": name,
+                    "exe": exe,
+                     "reason": f"Keyword={keyword_suspicious}, Path={keyword_path}, SignatureSuspicious={sig_suspicious}"
+                })
         except psutil.NoSuchProcess:
         # Skip processes that no longer exist
             continue
@@ -52,7 +77,6 @@ for proc in psutil.process_iter(['pid','name','exe']):
 
 #---------------------------------------------------- Network Monitoring ----------------------------------------------------
 
-# --- Configuration ---
 SAFE_NAMES = {"code.exe", "zoom.exe", "brave.exe", "chrome.exe", "python.exe", "java.exe","postgres.exe", "steam.exe", "spotify.exe","whatsapp.exe","githubdesktop.exe"}
 SAFE_REMOTE_PORTS = {80, 443}  # HTTP/HTTPS
 KEY_STATES = {"ESTABLISHED", "SYN_SENT"}  # connection states to monitor
@@ -62,7 +86,6 @@ INTERVAL_SEC = 1
 # --- Counter for repeated connections ---
 counts = Counter()
 
-# Monitor connections
 for i in range(DURATION_SEC):
     for c in psutil.net_connections(kind="inet"):
         if not c.raddr or c.status not in KEY_STATES:
@@ -74,8 +97,23 @@ for i in range(DURATION_SEC):
                  name = "unknown"
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             name = "unknown"
-        if c.raddr.ip.startswith("127.") or name in SAFE_NAMES or c.raddr.port in SAFE_REMOTE_PORTS:
+        if c.raddr.ip.startswith("127.")  or c.raddr.port in SAFE_REMOTE_PORTS:
              continue
+        
+        exe_path = None
+        try:
+            if c.pid:
+                exe_path = psutil.Process(c.pid).exe()
+        except Exception:
+                exe_path = None
+
+        sig_suspicious = False
+        if name in TRUSTED_SIGNATURES and exe_path:
+            sig_status = check_file_signature(exe_path)
+            if sig_status != "Valid":
+                sig_suspicious = True
+            else:
+                continue  # signature valid → safe
         
         if c.laddr:
             laddr =  f"{c.laddr.ip}:{c.laddr.port}"
@@ -107,8 +145,8 @@ file_type_count = {}  # {"jpg": 2, "pdf": 3}
 infected_files = []  # [("file.pdf", hash)]
 mismatches = []  
 
-folder1  = r"test_files"
-folder = r"C:\Users\Asus\Downloads"
+folder  = r"test_files"
+folder1= r"C:\Users\Asus\Downloads"
 for root, dirs, files in os.walk(folder):
     for file in files:
         total_files += 1
@@ -182,7 +220,7 @@ with open(scanner_file_path,"w") as report:
     report.write("Suspicious Processes:\n")
     if suspicious_process:
          for proc in suspicious_process:
-            report.write(f"     PID: {proc['pid']}, Name: {proc['name']}, Path: {proc['exe']}\n")
+            report.write(f"     PID: {proc['pid']}, Name: {proc['name']}, Path: {proc['exe']}, Reason: {proc['reason']}\n")
     else:
           report.write("    None detected\n")
 
