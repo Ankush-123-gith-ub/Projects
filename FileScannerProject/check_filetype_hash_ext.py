@@ -2,6 +2,8 @@ import os
 import hashlib
 import filetype
 import pandas as pd
+import subprocess
+import requests
 
 #---------------------------------------------------- file type check ----------------------------------------------------
 def file_type_identifier(path):
@@ -159,14 +161,56 @@ def get_hash_file(path, chunk_size=4096):
     }
 
 # ----------------- Check if File is Malware -----------------
+# VT_API_KEY = "5980ab6f0968f89d77b5835ca1f1f99e777be3fb69fcf83a73395fffff2f88ca"
+VT_API_KEY = os.getenv("VT_API_KEY", "5980ab6f0968f89d77b5835ca1f1f99e777be3fb69fcf83a73395fffff2f88ca")  
+VT_URL = "https://www.virustotal.com/api/v3/files/"
+
 def malware_hashes_check(path):
-    file_hashes = get_hash_file(path)
+    try:
+        file_hashes = get_hash_file(path)
 
-    if file_hashes["md5"] in md5_set:
-        return True, "MD5", file_hashes["md5"]
-    elif file_hashes["sha1"] in sha1_set:
-        return True, "SHA1", file_hashes["sha1"]
-    elif file_hashes["sha256"] in sha256_set:
-        return True, "SHA256", file_hashes["sha256"]
+        if file_hashes["md5"] in md5_set:
+            return True, "MD5", file_hashes["md5"]
+        elif file_hashes["sha1"] in sha1_set:
+            return True, "SHA1", file_hashes["sha1"]
+        elif file_hashes["sha256"] in sha256_set:
+            return True, "SHA256", file_hashes["sha256"]
 
-    return False, None, None
+        # 2. VirusTotal fallback (use sha256)
+        headers = {"x-apikey": VT_API_KEY}
+        resp = requests.get(VT_URL + file_hashes["sha256"], headers=headers, timeout=15)
+
+        if resp.status_code == 200:
+            data = resp.json()
+            stats = data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
+            malicious = stats.get("malicious", 0)
+            if malicious > 0:
+                return True, "VirusTotal", f"{malicious} engines flagged"
+            else:
+                return False, "VirusTotal", "No engines flagged"
+        elif resp.status_code == 404:
+            return False, "VirusTotal", "Hash not found"
+        else:
+            return False, "VirusTotalError", f"HTTP {resp.status_code}"
+
+    except Exception as e:
+        return False, "ERROR", str(e)
+
+
+#--------------------------------------------------- check digital signature ----------------------------------------------------#
+def check_file_signature(path):
+    try:
+        result = subprocess.run(
+            ["signtool", "verify", "/pa", path],
+            capture_output=True,
+            text=True
+        )
+        output = result.stdout + result.stderr
+        if "Successfully verified" in output:
+            return "Valid"
+        elif "No signature" in output:
+            return "Unsigned"
+        else:
+            return "Invalid"
+    except Exception:
+        return "Error"
