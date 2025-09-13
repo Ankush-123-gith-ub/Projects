@@ -7,27 +7,12 @@ from collections import Counter
 from check_filetype_hash_ext import check_extension_mismatch
 from check_filetype_hash_ext import malware_hashes_check
 from check_filetype_hash_ext import file_type_identifier
-from check_filetype_hash_ext import check_file_signature
+from check_filetype_hash_ext import heuristic_scan
 
 #-------------------------------------------  monitoring suspicious process by keywords and addr ----------------------------------
 
-
 suspicious_keywords = ["keylogger", "kl", "hooker", "payload"]
 whitelist = ["code.exe", "zoom.exe", "python.exe","zwebview2agent.exe","grammarly.desktop.exe","githubdesktop.exe"]
- 
-TRUSTED_SIGNATURES = {
-    "code.exe": "Microsoft Corporation",
-    "zoom.exe": "Zoom Video Communications, Inc.",
-    "python.exe": "Python Software Foundation",
-    "githubdesktop.exe": "GitHub, Inc.",
-    "whatsapp.exe": "WhatsApp LLC",
-    "chrome.exe": "Google LLC",
-    "brave.exe": "Brave Software, Inc.",
-    "spotify.exe": "Spotify AB",
-    "steam.exe": "Valve Corporation"
-}
-
-
 suspicious_dirs = ["C:\\Users\\Asus\\AppData", "C:\\Users\\Asus\\Temp"]
 
 suspicious_process = []
@@ -55,18 +40,12 @@ for proc in psutil.process_iter(['pid','name','exe']):
                       keyword_path = True
                       break
                  
-            sig_suspicious = False
-            if name in TRUSTED_SIGNATURES and exe:
-                sig_status = check_file_signature(exe)
-                if sig_status != "Valid":
-                    sig_suspicious = True
-                 
-            if (keyword_suspicious or keyword_path or sig_suspicious) and name not in whitelist:
+            if (keyword_suspicious or keyword_path) and name not in whitelist:
                 suspicious_process.append({
                     "pid": proc.info['pid'],
                     "name": name,
                     "exe": exe,
-                     "reason": f"Keyword={keyword_suspicious}, Path={keyword_path}, SignatureSuspicious={sig_suspicious}"
+                     "reason": f"Keyword={keyword_suspicious}, Path={keyword_path}"
                 })
         except psutil.NoSuchProcess:
         # Skip processes that no longer exist
@@ -97,23 +76,13 @@ for i in range(DURATION_SEC):
                  name = "unknown"
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             name = "unknown"
+
+        
+        if name in SAFE_NAMES:  # <-- skip trusted apps
+            continue
+
         if c.raddr.ip.startswith("127.")  or c.raddr.port in SAFE_REMOTE_PORTS:
              continue
-        
-        exe_path = None
-        try:
-            if c.pid:
-                exe_path = psutil.Process(c.pid).exe()
-        except Exception:
-                exe_path = None
-
-        sig_suspicious = False
-        if name in TRUSTED_SIGNATURES and exe_path:
-            sig_status = check_file_signature(exe_path)
-            if sig_status != "Valid":
-                sig_suspicious = True
-            else:
-                continue  # signature valid → safe
         
         if c.laddr:
             laddr =  f"{c.laddr.ip}:{c.laddr.port}"
@@ -134,8 +103,6 @@ for i in range(DURATION_SEC):
         counts[key] +=1
     
     time.sleep(INTERVAL_SEC)
-
-
 
 #---------------------------------------------------- main ---------------------------------------------------- 
 total_files = 0
@@ -161,15 +128,12 @@ for root, dirs, files in os.walk(folder):
             except Exception as e:
                 print(f"Skipping file {file_path}, error: {e}")
 
-
-            ##### count safe and infected files and stroing with name ####
+            ##### count safe and infected files and storing with name ####
             is_malware,name,h = malware_hashes_check(file_path)
             if not is_malware:
                 safe_count += 1
             else:
-                
-                #   infected_files[infected_count] = (file,malware_hashes_check(file_path)) wrong 
-                infected_count+=1
+                infected_count +=1
                 infected_files.append((file,name,h))
             
             ###### file type count#######
@@ -178,7 +142,6 @@ for root, dirs, files in os.walk(folder):
                 file_type_count[detected] += 1
             else:
                 file_type_count[detected] = 1
-
 
 #---------------------------------------------------- writing file ----------------------------------------------------
 time_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -197,32 +160,27 @@ with open(scanner_file_path,"w") as report:
         report.write(f"    {file}: {count}\n")
     report.write("\n")
 
-
     report.write("\n" + "-"*60 + "\n")
-
     report.write("Infected files:\n")
     if infected_count:
         for file,name,h in infected_files:
             report.write(f"    {file} --> Infected({h}) with ({name})\n")
 
-
-
     report.write("\n" + "-"*60 + "\n")
     report.write("\nMismatched file extensions:\n")
     if mismatches:
-            for file, ext, detected in mismatches:
-                report.write(f"    [WARNING] {file}: [extension .{ext}] does not match detected type {detected}\n")
+        for file, ext, detected in mismatches:
+            report.write(f"    [WARNING] {file}: [extension .{ext}] does not match detected type {detected}\n")
     else:
         report.write("    None detected\n")
 
-    
     report.write("\n" + "-"*60 + "\n")
     report.write("Suspicious Processes:\n")
     if suspicious_process:
-         for proc in suspicious_process:
+        for proc in suspicious_process:
             report.write(f"     PID: {proc['pid']}, Name: {proc['name']}, Path: {proc['exe']}, Reason: {proc['reason']}\n")
     else:
-          report.write("    None detected\n")
+        report.write("    None detected\n")
 
     report.write("\n" + "-"*60 + "\n")
     report.write("\nRepeated suspicious connections:\n")
@@ -235,9 +193,18 @@ with open(scanner_file_path,"w") as report:
         for (name, raddr), n in counts.most_common(10):
              if n > THRESHOLD:
                 report.write(f"[ALERT] {n:>3} times -> Process: {name:<20} Remote: {raddr}\n")
-
     else:
         report.write("None detected\n")     
+
+    report.write("\n" + "-"*60 + "\n")
+    report.write("\nHeuristic scan:\n")
+    is_suspicious, method, reason = heuristic_scan(file_path)
+    if is_suspicious:
+        infected_count += 1
+        infected_files.append((file, method, reason))
+    else:
+        safe_count += 1
+
 print("Report Done Succesfully.")    
 # Console summary
 print("===== Scan Summary =====")
@@ -245,10 +212,8 @@ print(f"Total files scanned: {total_files}")
 print(f"Safe files: {safe_count}")
 print(f"Infected files: {infected_count}")
 print(f"Report saved at: {scanner_file_path}")
-print(f"Suspicius process: {suspicious_process}")
+print(f"Suspicious process: {suspicious_process}")
 print(f"\nTop repeated suspicious connections (over {DURATION_SEC} sec):\n")
 for (name, raddr), n in counts.most_common(10):
      print(f"{n:>3} times -> Process: {name:<20} Remote: {raddr}")
-print(f"\nTotal unique suspicious connections: {len(counts)}")     
-
-#------------------------------------------------------------------------------------------------------------------------------------------
+print(f"\nTotal unique suspicious connections: {len(counts)}")

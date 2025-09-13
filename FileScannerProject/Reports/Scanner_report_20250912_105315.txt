@@ -1,0 +1,43 @@
+Total files scanned: 11
+Safe files: 10
+Infected files: 1
+
+File types detected:
+
+------------------------------------------------------------
+    jpg: 4
+    pdf: 3
+    Unknown: 2
+    png: 2
+
+
+------------------------------------------------------------
+Infected files:
+    harmless.txt --> Infected(61 engines flagged) with (VirusTotal)
+
+------------------------------------------------------------
+
+Mismatched file extensions:
+    [WARNING] text.exe: [extension .exe] does not match detected type Unknown
+
+------------------------------------------------------------
+Suspicious Processes:
+     PID: 3080, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 22924, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 23088, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 24592, Name: whatsapp.exe, Path: c:\program files\windowsapps\5319275a.whatsappdesktop_2.2535.3.0_x64__cv1g1gvanyjgm\whatsapp.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 28752, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 30412, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 33904, Name: steam.exe, Path: c:\program files (x86)\steam\steam.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 34040, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+     PID: 34680, Name: spotify.exe, Path: c:\program files\windowsapps\spotifyab.spotifymusic_1.272.438.0_x64__zpdnekdrzrea0\spotify.exe, Reason: Keyword=False, Path=False, SignatureSuspicious=True
+
+------------------------------------------------------------
+
+Repeated suspicious connections:
+
+Top 10 repeated suspicious connections:
+ 15 times -> Process: spotify.exe          Remote: 64.233.170.188:5228 (sg-in-f188.1e100.net)
+
+Connections above threshold:
+[ALERT]  15 times -> Process: spotify.exe          Remote: 64.233.170.188:5228 (sg-in-f188.1e100.net)

@@ -1,18 +1,20 @@
-Total files scanned: 9
-Safe files: 9
-Infected files: 0
+Total files scanned: 13
+Safe files: 12
+Infected files: 1
 
 File types detected:
 
 ------------------------------------------------------------
-    jpg: 3
+    jpg: 4
+    Unknown: 3
     pdf: 3
+    exe: 1
     png: 2
-    Unknown: 1
 
 
 ------------------------------------------------------------
 Infected files:
+    harmless.txt --> Infected(61 engines flagged) with (VirusTotal)
 
 ------------------------------------------------------------
 
@@ -27,3 +29,7 @@ Suspicious Processes:
 
 Repeated suspicious connections:
 None detected
+
+------------------------------------------------------------
+
+Heuristic scan:

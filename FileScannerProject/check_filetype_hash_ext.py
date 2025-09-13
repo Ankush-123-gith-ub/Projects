@@ -4,6 +4,7 @@ import filetype
 import pandas as pd
 import subprocess
 import requests
+import re
 
 #---------------------------------------------------- file type check ----------------------------------------------------
 def file_type_identifier(path):
@@ -198,19 +199,52 @@ def malware_hashes_check(path):
 
 
 #--------------------------------------------------- check digital signature ----------------------------------------------------#
-def check_file_signature(path):
+# def check_file_signature(path):
+#     try:
+#         result = subprocess.run(
+#             ["signtool", "verify", "/pa", path],
+#             capture_output=True,
+#             text=True
+#         )
+#         output = result.stdout + result.stderr
+#         if "Successfully verified" in output:
+#             return "Valid"
+#         elif "No signature" in output:
+#             return "Unsigned"
+#         else:
+#             return "Invalid"
+#     except Exception:
+#         return "Error"
+    
+
+    #-------------------------------------------------- heuristic scan --------------------------------------------------#
+
+SUSPICIOUS_STRINGS = [
+    r"powershell", r"cmd\.exe", r"rundll32",
+    r"http://", r"https://", r"base64,", r"download"
+]
+
+def heuristic_scan(path):
+    reasons = []
+    suspicious_strings = []
+
     try:
-        result = subprocess.run(
-            ["signtool", "verify", "/pa", path],
-            capture_output=True,
-            text=True
-        )
-        output = result.stdout + result.stderr
-        if "Successfully verified" in output:
-            return "Valid"
-        elif "No signature" in output:
-            return "Unsigned"
-        else:
-            return "Invalid"
-    except Exception:
-        return "Error"
+        with open(path, "rb") as f:
+            data = f.read(2000000)  # read first ~2MB
+        text = data.decode("utf-8", errors="ignore")
+        for patt in SUSPICIOUS_STRINGS:
+            if re.search(patt, text, flags=re.IGNORECASE):
+                suspicious_strings.append(patt)
+        if suspicious_strings:
+            reasons.append("suspicious_strings")
+    except Exception as e:
+        reasons.append(f"read_error:{e}")
+
+    is_suspicious = len(suspicious_strings) > 0
+
+    details = {
+        "reasons": reasons,
+        "suspicious_strings": suspicious_strings
+    }
+
+    return is_suspicious, "Heuristic", details
