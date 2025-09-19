@@ -1,0 +1,39 @@
+Total files scanned: 13
+Safe files: 12
+Infected files: 1
+
+File types detected:
+
+------------------------------------------------------------
+    jpg: 4
+    Unknown: 3
+    pdf: 3
+    exe: 1
+    png: 2
+
+
+------------------------------------------------------------
+Infected files:
+    harmless.txt --> Infected(61 engines flagged) with (VirusTotal)
+
+------------------------------------------------------------
+
+Mismatched file extensions:
+    [WARNING] text.exe: [extension .exe] does not match detected type Unknown
+
+------------------------------------------------------------
+Suspicious Processes:
+    None detected
+
+------------------------------------------------------------
+
+Repeated suspicious connections:
+
+Top 10 repeated suspicious connections:
+  2 times -> Process: svchost.exe          Remote: 192.168.17.40:53 (192.168.17.40)
+
+Connections above threshold:
+
+------------------------------------------------------------
+
+Heuristic scan:
