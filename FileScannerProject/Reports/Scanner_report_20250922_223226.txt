@@ -28,7 +28,17 @@ Suspicious Processes:
 ------------------------------------------------------------
 
 Repeated suspicious connections:
-None detected
+
+Top 10 repeated suspicious connections:
+ 15 times -> Process: sita (1).exe         Remote: 192.168.0.115:1234 (kali)
+  4 times -> Process: svchost.exe          Remote: 172.16.221.242:7680 (UnknownHost)
+  1 times -> Process: svchost.exe          Remote: 172.16.218.57:7680 (UnknownHost)
+  1 times -> Process: svchost.exe          Remote: 172.16.222.208:7680 (UnknownHost)
+  1 times -> Process: svchost.exe          Remote: 172.16.222.42:7680 (UnknownHost)
+  1 times -> Process: svchost.exe          Remote: 172.16.217.150:7680 (UnknownHost)
+
+Connections above threshold:
+[ALERT]  15 times -> Process: sita (1).exe         Remote: 192.168.0.115:1234 (kali)
 
 ------------------------------------------------------------
 

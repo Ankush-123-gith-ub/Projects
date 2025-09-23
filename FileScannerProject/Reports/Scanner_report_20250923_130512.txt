@@ -28,7 +28,11 @@ Suspicious Processes:
 ------------------------------------------------------------
 
 Repeated suspicious connections:
-None detected
+
+Top 10 repeated suspicious connections:
+  2 times -> Process: svchost.exe          Remote: 192.168.17.40:53 (UnknownHost)
+
+Connections above threshold:
 
 ------------------------------------------------------------
 
